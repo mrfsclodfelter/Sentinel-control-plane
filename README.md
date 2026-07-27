@@ -199,4 +199,13 @@ Documentation:
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+Copyright © 2026 Franklin Clodfelter.
+
+Released under the [PolyForm Noncommercial License 1.0.0](LICENSE.md). You're
+free to use, modify, and share this for any **noncommercial** purpose — home
+labs, personal projects, research, education, nonprofits.
+
+**Commercial rights are expressly reserved.** This is source-available, not
+open source. If you'd like to use it commercially, open an issue — the answer
+isn't automatically no, it just needs a conversation. See
+[NOTICE.md](NOTICE.md) for the plain-language version.
