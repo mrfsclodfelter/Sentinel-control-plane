@@ -1,0 +1,6 @@
+hue:
+  enabled: false
+  bridge_host: "192.0.2.30"
+  username: "CHANGEME"
+  room_name: "The Lab"
+  light_ids: []

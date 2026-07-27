@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Sentinel Operations Console - WireGuard{% endblock %}
+{% block heading %}WireGuard{% endblock %}
+{% block content %}
+<section class="mission-banner">
+  <div>
+    <div class="eyebrow">REMOTE ACCESS</div>
+    <h1 class="mission-green">WIREGUARD PEERS</h1>
+    <p>Manage devices that can reach this host remotely over the wg0 tunnel (10.50.0.0/24). New peers are added live without disrupting anything already connected.</p>
+  </div>
+</section>
+
+<section class="section-title">Add a Device</section>
+<div class="table-card" style="padding:18px;">
+  <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+    <input class="cerb-input" id="wg-new-name" placeholder="Device name, e.g. My Laptop" style="flex:1;min-width:220px;">
+    <button type="button" class="small-button" id="wg-generate-btn">Generate Peer</button>
+  </div>
+  <p class="muted" style="font-size:12px;margin:10px 0 0;">The private key is shown once, right here, and is never stored on the server - scan the QR code with the WireGuard app or download the .conf now.</p>
+</div>
+
+<div id="wg-new-peer-result" style="display:none;margin-top:16px;"></div>
+
+<section class="section-title">Existing Peers</section>
+<div class="table-card" style="padding:0;">
+  <table>
+    <thead><tr><th>Name</th><th>Address</th><th>Status</th><th>Last Handshake</th><th>Transfer</th></tr></thead>
+    <tbody id="wg-peers-body"></tbody>
+  </table>
+</div>
+{% endblock %}
+{% block scripts %}<script src="/static/js/wireguard.js"></script>{% endblock %}

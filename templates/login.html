@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+<head>
+  <title>Sentinel — Sign in</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1628">
+  <link rel="stylesheet" href="/static/css/mission.css">
+  <style>
+    .login-shell{min-height:100vh;display:flex;align-items:center;justify-content:center;}
+    .login-card{width:100%;max-width:360px;padding:32px;border-radius:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);}
+    .login-card img{height:40px;margin-bottom:16px;}
+    .login-card input{width:100%;box-sizing:border-box;padding:10px 12px;margin:8px 0 16px;border-radius:8px;border:1px solid rgba(255,255,255,0.15);background:rgba(0,0,0,0.2);color:inherit;}
+    .login-card button{width:100%;padding:10px;border-radius:8px;}
+    .login-error{color:#ff6b6b;margin-bottom:12px;font-size:0.9em;}
+  </style>
+</head>
+<body class="mission-shell">
+<div class="login-shell">
+  <form class="login-card" method="POST" action="/login{{ '?next=' + request.args.get('next') if request.args.get('next') else '' }}">
+    <img src="/static/branding/sentinel-logo.png" alt="Sentinel">
+    {% if error %}<div class="login-error">{{ error }}</div>{% endif %}
+    <label for="password">Password</label>
+    <input type="password" id="password" name="password" autofocus required>
+    <button type="submit" class="small-button">Sign in</button>
+  </form>
+</div>
+</body>
+</html>

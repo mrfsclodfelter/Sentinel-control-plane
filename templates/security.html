@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Cerberus Operations Console - Security{% endblock %}
+{% block heading %}Security Operations Center{% endblock %}
+{% block content %}
+<section class="mission-banner security-banner">
+  <div><div class="eyebrow">WAZUH SECURITY CENTER</div><h1 id="threat-state" class="{{ 'mission-green' if wazuh.threat_level == 'GREEN' else 'mission-red' if wazuh.threat_level == 'CRITICAL' else 'mission-yellow' }}">{{ wazuh.threat_level }}</h1><p id="security-message">{% if wazuh.ok %}Wazuh API and Indexer telemetry active.{% else %}Security telemetry degraded: {{ wazuh.error }}{% endif %}</p></div>
+</section>
+<section class="metrics-grid">
+  <div class="metric-card hover-card" data-tip="Live metric from Cerberus telemetry. Refreshes automatically where supported."><span>Wazuh API</span><strong id="wazuh-api" class="{{ 'ok' if wazuh.health.ok else 'bad' }}">{{ "LIVE" if wazuh.health.ok else "OFFLINE" }}</strong></div>
+  <div class="metric-card hover-card" data-tip="Live metric from Cerberus telemetry. Refreshes automatically where supported."><span>Agents Active</span><strong id="agents-active">{{ wazuh.health.active_agents }}</strong></div>
+  <div class="metric-card hover-card" data-tip="Live metric from Cerberus telemetry. Refreshes automatically where supported."><span>Disconnected</span><strong id="agents-disconnected">{{ wazuh.health.disconnected_agents }}</strong></div>
+  <div class="metric-card hover-card" data-tip="Live metric from Cerberus telemetry. Refreshes automatically where supported."><span>Total Vulnerabilities</span><strong id="vuln-total">{{ wazuh.vulnerabilities.total }}</strong></div>
+</section>
+<section class="metrics-grid">
+  <div class="metric-card hover-card" data-tip="Live metric from Cerberus telemetry. Refreshes automatically where supported."><span>Critical</span><strong id="alert-critical" class="bad">{{ wazuh.vulnerabilities.critical }}</strong></div>
+  <div class="metric-card hover-card" data-tip="Live metric from Cerberus telemetry. Refreshes automatically where supported."><span>High</span><strong id="alert-high" class="warn">{{ wazuh.vulnerabilities.high }}</strong></div>
+  <div class="metric-card hover-card" data-tip="Live metric from Cerberus telemetry. Refreshes automatically where supported."><span>Medium</span><strong id="alert-medium" class="warn">{{ wazuh.vulnerabilities.medium }}</strong></div>
+  <div class="metric-card hover-card" data-tip="Live metric from Cerberus telemetry. Refreshes automatically where supported."><span>Low</span><strong id="alert-low" class="ok">{{ wazuh.vulnerabilities.low }}</strong></div>
+</section>
+<div id="wazuh-error">{% if wazuh.error %}<div class="alert warn">{{ wazuh.error }}</div>{% endif %}</div>
+<section class="section-title">Agents</section>
+<section class="device-grid" id="wazuh-agents-grid">
+{% for agent in wazuh.health.agents %}
+<article class="device-card agent-card">
+  <div class="device-top"><h3>{{ agent.name }}</h3><span class="led {{ 'online' if agent.status == 'active' else 'offline' }}">{{ agent.status|upper }}</span></div>
+  <div class="muted">{{ agent.ip if agent.ip is defined else "-" }}</div>
+  <div class="mono">ID {{ agent.id }} · {{ agent.os.name if agent.os is defined and agent.os.name is defined else "Unknown OS" }}</div>
+  <a class="small-button" href="/security/agent/{{ agent.id }}">Open Agent Detail</a>
+</article>
+{% endfor %}
+</section>
+<section class="two-column">
+  <div><section class="section-title">Top Vulnerable Agents</section><div class="table-card hover-card" data-tip="Operational data table. Hover rows where available for additional context."><table><thead><tr><th>Agent</th><th>Vulnerabilities</th></tr></thead><tbody id="top-agents-body">{% for item in wazuh.vulnerabilities.top_agents %}<tr><td>{{ item.name }}</td><td>{{ item.count }}</td></tr>{% endfor %}</tbody></table></div></div>
+  <div><section class="section-title">Top Packages</section><div class="table-card hover-card" data-tip="Operational data table. Hover rows where available for additional context."><table><thead><tr><th>Package</th><th>Count</th></tr></thead><tbody id="top-packages-body">{% for item in wazuh.vulnerabilities.top_packages %}<tr><td>{{ item.name }}</td><td>{{ item.count }}</td></tr>{% endfor %}</tbody></table></div></div>
+</section>
+
+<section class="section-title">Threat Hunting Snapshot</section>
+<section class="two-column">
+  <div class="table-card hover-card" data-tip="Operational data table. Hover rows where available for additional context."><table><thead><tr><th>Top Alert Rule</th><th>Count</th></tr></thead><tbody id="threat-rules-body">
+  {% for item in wazuh.threat_hunting.top_rules %}<tr><td>{{ item.name }}</td><td>{{ item.count }}</td></tr>{% endfor %}
+  </tbody></table></div>
+  <div class="table-card hover-card" data-tip="Operational data table. Hover rows where available for additional context."><table><thead><tr><th>Top Rule Group</th><th>Count</th></tr></thead><tbody id="threat-groups-body">
+  {% for item in wazuh.threat_hunting.top_groups %}<tr><td>{{ item.name }}</td><td>{{ item.count }}</td></tr>{% endfor %}
+  </tbody></table></div>
+</section>
+<section class="section-title">Recent Alerts</section>
+<div class="table-card hover-card" data-tip="Operational data table. Hover rows where available for additional context."><table><thead><tr><th>Time</th><th>Agent</th><th>Level</th><th>Rule</th><th>Groups</th></tr></thead><tbody>
+{% for item in wazuh.threat_hunting.recent_alerts %}<tr><td>{{ item.time }}</td><td>{{ item.agent }}</td><td class="{{ 'bad' if item.severity == 'critical' else 'warn' if item.severity in ['high','medium'] else 'ok' }}">{{ item.level }}</td><td>{{ item.rule }}</td><td>{{ item.groups|join(', ') }}</td></tr>{% endfor %}
+</tbody></table></div>
+<section class="section-title">Recent CVEs</section>
+<div class="table-card hover-card" data-tip="Operational data table. Hover rows where available for additional context."><table><thead><tr><th>Agent</th><th>CVE</th><th>Severity</th><th>Score</th><th>Package</th><th>Detected</th></tr></thead><tbody id="recent-cves-body">{% for vuln in wazuh.vulnerabilities.recent %}<tr><td>{{ vuln.agent }}</td><td>{{ vuln.cve }}</td><td class="{{ 'bad' if vuln.severity == 'Critical' else 'warn' if vuln.severity in ['High','Medium'] else 'ok' }}">{{ vuln.severity }}</td><td>{{ vuln.score }}</td><td>{{ vuln.package }}</td><td>{{ vuln.detected_at }}</td></tr>{% endfor %}</tbody></table></div>
+{% endblock %}
+{% block scripts %}<script src="/static/js/security.js"></script>{% endblock %}

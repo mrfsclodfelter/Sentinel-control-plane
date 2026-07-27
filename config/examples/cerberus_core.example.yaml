@@ -1,0 +1,4 @@
+enabled: true
+base_url: "http://192.0.2.50:5000"
+timeout_seconds: 1.5
+display_name: "Cerberus Core"

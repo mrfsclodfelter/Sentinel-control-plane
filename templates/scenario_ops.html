@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Sentinel Operations Console - Scenario Ops{% endblock %}
+{% block heading %}Scenario Ops{% endblock %}
+{% block content %}
+<section class="mission-banner">
+  <div>
+    <div class="eyebrow">SCENARIO CAPTURE</div>
+    <h1 class="mission-green">SCENARIO OPS</h1>
+    <p>Define a scenario, capture everything that happens while it's active, and download a formatted report afterward.</p>
+  </div>
+</section>
+
+<div id="scenario-active-panel" style="display:none;">
+  <section class="section-title">Active Scenario</section>
+  <div class="table-card" style="padding:18px;">
+    <div class="device-top">
+      <div>
+        <h3 id="active-scenario-name">-</h3>
+        <div class="muted" id="active-scenario-meta">-</div>
+      </div>
+      <button type="button" class="small-button danger-soft" id="scenario-stop-btn">Stop Scenario</button>
+    </div>
+    <div style="margin-top:14px;display:flex;gap:10px;">
+      <input class="cerb-input" id="scenario-note-input" placeholder="Add an analyst note..." style="flex:1;">
+      <button type="button" class="small-button" id="scenario-note-btn">Add Note</button>
+    </div>
+    <div class="section-title" style="font-size:12px;margin:16px 0 6px;">Live Activity Timeline</div>
+    <div id="active-scenario-events" class="table-card" style="max-height:320px;overflow:auto;padding:12px;"></div>
+  </div>
+</div>
+
+<div id="scenario-new-panel">
+  <section class="section-title">Start New Scenario</section>
+  <div class="table-card" style="padding:18px;">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;">
+      <div>
+        <label class="field-label">Scenario Name</label>
+        <input class="cerb-input" id="scenario-name" placeholder="Example: Red Team Exercise 1">
+      </div>
+      <div>
+        <label class="field-label">Scenario Type</label>
+        <input class="cerb-input" id="scenario-type" placeholder="Incident Response Drill">
+      </div>
+      <div>
+        <label class="field-label">Time Limit (minutes, optional)</label>
+        <input class="cerb-input" id="scenario-time-limit" type="number" min="1" placeholder="No limit">
+      </div>
+    </div>
+    <label class="field-label" style="margin-top:14px;">Machines Involved</label>
+    <div id="scenario-machines" style="display:flex;gap:14px;flex-wrap:wrap;margin:6px 0 14px;">
+      {% for key, device in devices.items() %}
+      <label class="audio-toggle-row"><input type="checkbox" class="scenario-machine-checkbox" value="{{ key }}"> {{ device.name }}</label>
+      {% endfor %}
+    </div>
+    <button class="small-button" id="scenario-start-btn">Start Scenario</button>
+  </div>
+</div>
+
+<section class="section-title">Past Scenarios</section>
+<div id="scenario-history-list" class="device-grid"></div>
+
+<script src="/static/js/scenario-ops.js"></script>
+{% endblock %}

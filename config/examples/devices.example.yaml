@@ -1,0 +1,16 @@
+devices:
+  example_node:
+    name: Example Node
+    ip: 192.0.2.40
+    mac: "AA:BB:CC:DD:EE:FF"
+    role: Proxmox Node
+    method: wol            # wol | relay | pi_relay | status_only
+    relay_gpio: 0
+    relay_enabled: false
+    node: example-node     # Proxmox node name, used for shutdown_method: proxmox
+    wake_method: wol
+    shutdown_method: proxmox   # proxmox | none
+    always_on: false
+    managed_power: true
+    include_in_start: true
+    enabled: true

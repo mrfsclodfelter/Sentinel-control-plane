@@ -1,0 +1,1 @@
+async function refreshNetwork(){const data=await fetchJSON('/api/status');for(const [key,status] of Object.entries(data.statuses)){const el=document.getElementById('status-'+key);if(el){el.textContent=status.toUpperCase();el.className='led '+status}}}refreshNetwork();setInterval(refreshNetwork,5000);

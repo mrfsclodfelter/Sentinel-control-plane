@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Cerberus Ops - Virtualization{% endblock %}
+{% block heading %}Virtualization{% endblock %}
+{% block content %}
+<section class="mission-banner">
+  <div>
+    <div class="eyebrow">PROXMOX ACTIVE OPERATIONS</div>
+    <h1 class="mission-green">VM COMMAND CENTER</h1>
+    <p>Power control, snapshots, backups, console launch, monitor queries, clone, and migration actions.</p>
+  </div>
+  <a class="launch-button" href="/operations-queue">Operations Queue</a>
+</section>
+
+<section class="device-grid">
+{% for vm in proxmox.vms %}
+<article class="device-card vm-operation-card hover-card"
+  data-node="{{ vm.node }}"
+  data-vmid="{{ vm.vmid }}"
+  data-name="{{ vm.name or ('VM ' ~ vm.vmid) }}"
+  data-tip="{{ vm.name or ('VM ' ~ vm.vmid) }} · VMID {{ vm.vmid }} · {{ vm.node }} · {{ vm.status }}">
+  <div class="device-top">
+    <h3>{{ vm.name or ("VM " ~ vm.vmid) }}</h3>
+    <span class="led {{ 'online' if vm.status == 'running' else 'offline' }}">{{ vm.status|upper }}</span>
+  </div>
+  <div class="mono">VMID {{ vm.vmid }} · {{ vm.node }}</div>
+  <div class="muted">CPU {{ ((vm.cpu or 0) * 100)|round(1) }}% · RAM {{ ((vm.mem or 0) / 1024 / 1024 / 1024)|round(1) }} GB</div>
+
+  <div class="vm-action-row vm-action-wrap">
+    <button type="button" class="small-button vm-op-btn" data-kind="action" data-action="start" data-node="{{ vm.node }}" data-vmid="{{ vm.vmid }}" data-name="{{ vm.name or ('VM ' ~ vm.vmid) }}">Start</button>
+    <button type="button" class="small-button vm-op-btn" data-kind="action" data-action="shutdown" data-node="{{ vm.node }}" data-vmid="{{ vm.vmid }}" data-name="{{ vm.name or ('VM ' ~ vm.vmid) }}">Shutdown</button>
+    <button type="button" class="small-button vm-op-btn" data-kind="action" data-action="reboot" data-node="{{ vm.node }}" data-vmid="{{ vm.vmid }}" data-name="{{ vm.name or ('VM ' ~ vm.vmid) }}">Reboot</button>
+    <button type="button" class="small-button vm-op-btn" data-kind="action" data-action="stop" data-node="{{ vm.node }}" data-vmid="{{ vm.vmid }}" data-name="{{ vm.name or ('VM ' ~ vm.vmid) }}">Stop</button>
+    <button type="button" class="small-button vm-op-btn" data-kind="action" data-action="reset" data-node="{{ vm.node }}" data-vmid="{{ vm.vmid }}" data-name="{{ vm.name or ('VM ' ~ vm.vmid) }}">Reset</button>
+    <button type="button" class="small-button vm-op-btn" data-kind="snapshot" data-node="{{ vm.node }}" data-vmid="{{ vm.vmid }}" data-name="{{ vm.name or ('VM ' ~ vm.vmid) }}">Snapshot</button>
+    <button type="button" class="small-button vm-op-btn" data-kind="backup" data-node="{{ vm.node }}" data-vmid="{{ vm.vmid }}" data-name="{{ vm.name or ('VM ' ~ vm.vmid) }}">Backup</button>
+    <button type="button" class="small-button vm-op-btn" data-kind="console" data-node="{{ vm.node }}" data-vmid="{{ vm.vmid }}" data-name="{{ vm.name or ('VM ' ~ vm.vmid) }}">Console</button>
+    <button type="button" class="small-button vm-op-btn" data-kind="monitor" data-node="{{ vm.node }}" data-vmid="{{ vm.vmid }}" data-name="{{ vm.name or ('VM ' ~ vm.vmid) }}">Monitor</button>
+    <button type="button" class="small-button vm-op-btn" data-kind="clone" data-node="{{ vm.node }}" data-vmid="{{ vm.vmid }}" data-name="{{ vm.name or ('VM ' ~ vm.vmid) }}">Clone</button>
+    <button type="button" class="small-button vm-op-btn" data-kind="migrate" data-node="{{ vm.node }}" data-vmid="{{ vm.vmid }}" data-name="{{ vm.name or ('VM ' ~ vm.vmid) }}">Migrate</button>
+  </div>
+</article>
+{% endfor %}
+</section>
+{% endblock %}
+{% block scripts %}
+<script src="/static/js/vm-control-v73.js?v=730"></script>
+{% endblock %}

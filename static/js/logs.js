@@ -1,0 +1,1 @@
+async function refreshLogs(){const data=await fetchJSON('/api/status');document.getElementById('bootlog').textContent=data.logs.join('\n')}refreshLogs();setInterval(refreshLogs,5000);

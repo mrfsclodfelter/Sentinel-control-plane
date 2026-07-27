@@ -1,0 +1,6 @@
+# Do not hand-edit this file's real counterpart (config/local/auth.yaml) -
+# run scripts/set_password.py, which writes a proper hash and a random
+# Flask secret key.
+username: "CHANGEME"
+password_hash: "CHANGEME"
+flask_secret_key: "CHANGEME"

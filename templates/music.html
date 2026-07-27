@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Sentinel Operations Console - Music{% endblock %}
+{% block heading %}Music Library{% endblock %}
+{% block content %}
+<style>
+  .music-lib-table{width:100%;border-collapse:collapse;}
+  .music-lib-table th{position:sticky;top:0;background:#0d1320;text-align:left;padding:10px 12px;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid var(--border);cursor:pointer;user-select:none;white-space:nowrap;}
+  .music-lib-table th:hover{color:var(--blue);}
+  .music-lib-table th.sort-active{color:var(--blue);}
+  .music-lib-table td{padding:7px 12px;border-bottom:1px solid rgba(69,200,255,.08);vertical-align:middle;}
+  .music-lib-table tr:hover td{background:rgba(69,200,255,.04);}
+  .music-lib-actions{display:flex;gap:6px;white-space:nowrap;}
+  .music-thumb{width:34px;height:34px;border-radius:6px;object-fit:cover;background:#0b1220;display:block;}
+  .music-thumb-placeholder{width:34px;height:34px;border-radius:6px;background:#0b1220;border:1px solid rgba(69,200,255,.15);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px;}
+  .playlist-track-list{list-style:none;margin:0 0 10px;padding:0;display:flex;flex-direction:column;gap:4px;}
+  .playlist-track-row{display:flex;align-items:center;gap:8px;background:#0b1220;border:1px solid rgba(69,200,255,.12);border-radius:10px;padding:7px 10px;cursor:grab;}
+  .playlist-track-row.dragging{opacity:.4;}
+  .playlist-track-row .drag-handle{color:var(--muted);}
+  .playlist-track-row .pt-name{flex:1;font-size:13px;}
+  .playlist-track-row .pt-artist{color:var(--muted);font-size:12px;}
+  .playlist-track-row .tiny-remove{background:none;border:none;color:var(--red);cursor:pointer;font-size:16px;line-height:1;padding:2px 6px;}
+  .playlist-editor{border-top:1px solid var(--border);padding-top:10px;}
+</style>
+
+<section class="mission-banner">
+  <div>
+    <div class="eyebrow">BROWSER AUDIO</div>
+    <h1 class="mission-green">MUSIC LIBRARY</h1>
+    <p>Upload tracks, browse real artist/album metadata, build playlists, and play through the mini-player or a voice command.</p>
+  </div>
+</section>
+
+<div class="table-card" id="music-drop-zone" style="padding:32px;text-align:center;border:2px dashed rgba(69,200,255,.3);transition:border-color .15s,background .15s;">
+  <div class="eyebrow" style="margin-bottom:8px;">DRAG &amp; DROP</div>
+  <p class="muted" style="margin:0 0 14px;">Drop MP3, OGG, WAV, or M4A files here, or browse instead.</p>
+  <input type="file" id="music-upload-input" accept=".mp3,.ogg,.wav,.m4a" multiple style="display:none;">
+  <button class="small-button" id="music-upload-browse">Browse Files</button>
+</div>
+
+<section class="section-title" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+  <span>Library</span>
+  <input class="cerb-input" id="music-search" placeholder="Search title, artist, album…" style="max-width:280px;">
+</section>
+<div class="table-card" style="padding:0;max-height:440px;overflow-y:auto;">
+  <table class="music-lib-table">
+    <thead><tr>
+      <th style="cursor:default;"></th>
+      <th data-sort="name">Title</th>
+      <th data-sort="artist">Artist</th>
+      <th data-sort="album">Album</th>
+      <th data-sort="duration">Length</th>
+      <th style="cursor:default;"></th>
+    </tr></thead>
+    <tbody id="music-library-body"></tbody>
+  </table>
+  <div id="music-library-empty" class="alert warn" style="display:none;margin:14px;">No tracks uploaded yet.</div>
+</div>
+
+<section class="section-title" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+  <span>Playlists</span>
+  <div style="display:flex;gap:8px;">
+    <input class="cerb-input" id="playlist-name-input" placeholder="New playlist name">
+    <button type="button" class="small-button" id="playlist-new-btn">+ Create</button>
+  </div>
+</section>
+<div id="playlist-grid" class="device-grid"></div>
+{% endblock %}
+{% block scripts %}<script src="/static/js/music.js"></script>{% endblock %}

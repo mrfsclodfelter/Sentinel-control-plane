@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Cerberus Operations Console - Backups{% endblock %}
+{% block heading %}Backup Operations{% endblock %}
+{% block content %}
+<section class="metrics-grid"><div class="metric-card hover-card" data-tip="Live metric from Cerberus telemetry. Refreshes automatically where supported."><span>Backup API</span><strong id="backup-api" class="{{ 'ok' if backup.ok else 'warn' }}">{{ "LIVE" if backup.ok else "PARTIAL" }}</strong></div><div class="metric-card hover-card" data-tip="Live metric from Cerberus telemetry. Refreshes automatically where supported."><span>Scheduled Jobs</span><strong id="job-count">{{ backup.jobs|length }}</strong></div><div class="metric-card hover-card" data-tip="Live metric from Cerberus telemetry. Refreshes automatically where supported."><span>Recent Backup Tasks</span><strong id="task-count">{{ backup.recent_tasks|length }}</strong></div><div class="metric-card hover-card" data-tip="Live metric from Cerberus telemetry. Refreshes automatically where supported."><span>Target Storage</span><strong>osiris-backup</strong></div></section>
+<div id="backup-error">{% if backup.error %}<div class="alert warn">{{ backup.error }}</div>{% endif %}</div>
+<section class="section-title">Scheduled Backup Jobs</section><div class="table-card hover-card" data-tip="Operational data table. Hover rows where available for additional context."><table><thead><tr><th>Enabled</th><th>Schedule</th><th>Storage</th><th>VMs</th><th>Retention</th><th>Mode</th></tr></thead><tbody id="backup-jobs-body"></tbody></table></div>
+<section class="section-title">Recent Backup Tasks</section><div class="table-card hover-card" data-tip="Operational data table. Hover rows where available for additional context."><table><thead><tr><th>Node</th><th>Task</th><th>Status</th><th>Start</th><th>End</th></tr></thead><tbody id="backup-tasks-body"></tbody></table></div>
+{% endblock %}
+{% block scripts %}<script src="/static/js/backups.js"></script>{% endblock %}

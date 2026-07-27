@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Sentinel Operations Console - Network{% endblock %}
+{% block heading %}Infrastructure Topology{% endblock %}
+{% block content %}
+<section class="v3-card topo-panel network-live-map"><div class="panel-title">Cisco-Centered Live Network Topology</div>
+{% include "_topology_svg.html" %}
+</section>
+<section class="section-title">Network Devices</section>
+<section class="device-grid" id="network-grid">
+{% for key, device in devices.items() %}
+<article class="device-card hover-card" data-tip="Device or endpoint card. Status and metadata are derived from live checks or configured inventory."><div class="device-top"><h3>{{ device.name }}</h3><span id="status-{{ key }}" class="led {{ statuses[key] }}">{{ statuses[key]|upper }}</span></div><div class="muted">{{ device.role }}</div><div class="mono">{{ device.ip }}</div></article>
+{% endfor %}
+</section>
+{% endblock %}
+{% block scripts %}<script src="/static/js/network.js"></script><script src="/static/js/topology-status.js"></script>{% endblock %}

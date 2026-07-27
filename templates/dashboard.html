@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Sentinel Operations Console - Dashboard{% endblock %}
+{% block heading %}{% endblock %}
+{% block content %}
+<section class="mission-banner">
+  <div>
+    <div class="eyebrow">MISSION STATUS</div>
+    <h1 id="mission-state" class="{{ 'mission-green' if proxmox.ok and proxmox.quorum else 'mission-yellow' if proxmox.ok else 'mission-red' }}">{{ "OPERATIONAL" if proxmox.ok and proxmox.quorum else "DEGRADED" if proxmox.ok else "API ERROR" }}</h1>
+    <p id="mission-message">{{ "Cluster quorum active. Sentinel Net control plane is online." if proxmox.ok and proxmox.quorum else proxmox.error if proxmox.error else "System needs attention." }}</p>
+  </div>
+  <a class="launch-button" href="/start">Start Sentinel Net</a>
+</section>
+<section class="metrics-grid">
+  <div class="metric-card"><span>Quorum</span><strong id="quorum">{{ "YES" if proxmox.quorum else "NO" }}</strong></div>
+  <div class="metric-card"><span>Quorum</span><strong id="qdevice">{{ proxmox.qdevice_name if proxmox.qdevice else (proxmox.quorum_model or "")|upper }}</strong></div>
+  <div class="metric-card"><span>VMs Running</span><strong id="running-vms">{{ proxmox.running_vms }}</strong></div>
+  <div class="metric-card"><span>Internet</span><strong id="internet-state">{{ "ONLINE" if net.internet else "CHECK" }}</strong></div>
+</section>
+<section class="section-title">Operational Readiness</section>
+<section class="device-grid">
+  <article class="device-card"><div class="device-top"><h3>LAN Gateway</h3><span id="router-led" class="led {{ 'online' if net.router else 'offline' }}">{{ "ONLINE" if net.router else "OFFLINE" }}</span></div><div class="muted">Home router reachability</div><div class="mono">{{ net.targets.gateway }}</div></article>
+  <article class="device-card"><div class="device-top"><h3>Internet</h3><span id="internet-led" class="led {{ 'online' if net.internet else 'offline' }}">{{ "ONLINE" if net.internet else "OFFLINE" }}</span></div><div class="muted">External connectivity check</div><div class="mono">{{ net.targets.internet_probe }}</div></article>
+  <article class="device-card"><div class="device-top"><h3>DNS</h3><span id="dns-led" class="led {{ 'online' if net.dns else 'offline' }}">{{ "ONLINE" if net.dns else "OFFLINE" }}</span></div><div class="muted">Hostname resolution check</div><div class="mono">{{ net.targets.dns_probe }}</div></article>
+</section>
+<section class="section-title">Device Control</section>
+<section class="device-grid">
+{% for key, device in devices.items() %}
+<article class="device-card"><div class="device-top"><h3>{{ device.name }}</h3><span id="status-{{ key }}" class="led {{ statuses[key] }}">{{ statuses[key]|upper }}</span></div><div class="muted">{{ device.role }}</div><div class="mono">{{ device.ip or '-' }}</div>{% if device.method in ('wol', 'relay', 'pi_relay') and statuses[key] != "disabled" %}<a class="small-button" href="/wake/{{ key }}">Wake / Trigger</a>{% endif %}{% if device.get('shutdown_method') == 'proxmox' %}<button type="button" class="small-button danger-soft" data-power="shutdown" data-device="{{ key }}" data-name="{{ device.name }}">Shutdown</button>{% endif %}</article>
+{% endfor %}
+</section>
+<section class="section-title">Hades — Malware Lab (isolated network, status only)</section>
+<section class="device-grid">
+  <article class="device-card"><div class="device-top"><h3>REMnux</h3><span id="hades-guest-200" class="led unknown">UNKNOWN</span></div><div class="muted">Fake-internet (INetSim) + Ghidra + YARA</div><div class="mono">isolated detonation net</div></article>
+  <article class="device-card"><div class="device-top"><h3>FLARE-VM</h3><span id="hades-guest-201" class="led unknown">UNKNOWN</span></div><div class="muted">Windows analysis VM</div><div class="mono">isolated detonation net</div></article>
+</section>
+<section class="timeline-card"><div class="section-title">Activity Timeline</div><pre id="bootlog">{% for line in logs %}{{ line }}
+{% endfor %}</pre></section>
+{% endblock %}
+{% block scripts %}<script src="/static/js/dashboard.js"></script>
+<script>
+document.addEventListener('click', async (e) => {
+  const btn = e.target.closest('[data-power="shutdown"]');
+  if (!btn) return;
+  if (!confirm(`Shut down ${btn.dataset.name}?`)) return;
+  try {
+    const res = await fetch('/api/device/power', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({name: btn.dataset.device, action: 'shutdown'})});
+    const data = await res.json();
+    alert(data.message || data.error || 'Shutdown requested.');
+  } catch (err) { alert(err.message); }
+});
+</script>
+{% endblock %}

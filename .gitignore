@@ -1,0 +1,27 @@
+# Real secrets and credentials - the whole directory, no exceptions.
+# A directory boundary rather than a filename pattern on purpose: a naming
+# convention is something a person can violate at edit time, and did.
+config/local/
+
+# Runtime state / generated data (activity log, playlists, automations,
+# scenario captures)
+data/
+
+# Python
+venv/
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Uploaded media library - large, personal, and frequently copyrighted
+static/music/
+
+# Logs
+*.log
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

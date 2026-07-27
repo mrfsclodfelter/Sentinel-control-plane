@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Sentinel Operations Console - Cluster{% endblock %}
+{% block heading %}Cluster Systems{% endblock %}
+{% block content %}
+<section class="metrics-grid">
+  <div class="metric-card hover-card" data-tip="Live metric from Cerberus telemetry. Refreshes automatically where supported."><span>API</span><strong id="api-state" class="{{ 'ok' if proxmox.ok else 'bad' }}">{{ "LIVE" if proxmox.ok else "ERROR" }}</strong></div>
+  <div class="metric-card hover-card" data-tip="Live metric from Cerberus telemetry. Refreshes automatically where supported."><span>Quorum</span><strong id="quorum-state" class="{{ 'ok' if proxmox.quorum else 'warn' }}">{{ "HEALTHY" if proxmox.quorum else "NO QUORUM" }}</strong></div>
+  <div class="metric-card hover-card" data-tip="No QDevice is attached by design - this cluster runs on a real multi-node majority instead."><span>Quorum Model</span><strong id="qdevice-state" class="{{ 'ok' if proxmox.quorum else 'warn' }}">{{ proxmox.qdevice_name if proxmox.qdevice else (proxmox.quorum_model or "")|upper }}</strong></div>
+  <div class="metric-card hover-card" data-tip="Live metric from Cerberus telemetry. Refreshes automatically where supported."><span>VMs</span><strong id="vm-summary">{{ proxmox.running_vms }} / {{ proxmox.vms|length }}</strong></div>
+</section>
+{% if proxmox.error %}<div class="alert bad">Proxmox API Error: {{ proxmox.error }}</div>{% endif %}
+<section class="section-title">Nodes</section><div class="device-grid" id="nodes-grid"></div>
+<section class="section-title">Corosync / Membership</section>
+<div class="table-card hover-card" data-tip="Operational data table. Hover rows where available for additional context."><table><thead><tr><th>Name</th><th>Type</th><th>Status</th><th>Votes</th></tr></thead><tbody id="membership-body">{% for item in proxmox.membership %}<tr><td>{{ item.name }}</td><td>{{ item.type }}</td><td>{{ item.display_status }}</td><td>{{ item.display_votes }}</td></tr>{% endfor %}</tbody></table></div>
+{% endblock %}
+{% block scripts %}<script src="/static/js/cluster.js"></script>{% endblock %}

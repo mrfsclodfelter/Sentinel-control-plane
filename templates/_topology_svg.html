@@ -1,0 +1,37 @@
+<div class="svg-topology-wrap">
+<svg class="cerb-svg-topology" viewBox="0 0 1200 520" preserveAspectRatio="xMidYMid meet">
+  <defs>
+    <filter id="glow40"><feGaussianBlur stdDeviation="2.5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <linearGradient id="lineGrad40" x1="0" x2="1"><stop offset="0%" stop-color="#45c8ff"/><stop offset="100%" stop-color="#27f58a"/></linearGradient>
+  </defs>
+  <path id="router-cisco" class="topo-link active" d="M600 60 C600 110 600 145 600 180"/>
+  <path id="heavy-cisco" class="topo-link active" d="M600 180 C420 230 240 300 85 370"/>
+  <path id="light-cisco" class="topo-link active" d="M600 180 C471 230 341 300 230 370"/>
+  <path id="argus-cisco" class="topo-link active" d="M600 180 C521 230 443 300 375 370"/>
+  <path id="osiris-cisco" class="topo-link active backup-link" d="M600 180 C572 230 544 300 520 370"/>
+  <path id="atlas-cisco" class="topo-link active" d="M600 180 C623 230 646 300 665 370"/>
+  <path id="wazuh-cisco" class="topo-link active alert-link" d="M600 180 C674 230 747 300 810 370"/>
+  <path id="pi-cisco" class="topo-link active" d="M600 180 C724 230 849 300 955 370"/>
+  <path id="hades-cisco" class="topo-link active" d="M600 180 C775 230 950 300 1100 370"/>
+  <circle class="packet"><animateMotion dur="2.7s" repeatCount="indefinite"><mpath href="#router-cisco"/></animateMotion></circle>
+  <circle class="packet"><animateMotion dur="3.1s" repeatCount="indefinite"><mpath href="#heavy-cisco"/></animateMotion></circle>
+  <circle class="packet"><animateMotion dur="3.3s" repeatCount="indefinite"><mpath href="#light-cisco"/></animateMotion></circle>
+  <circle class="packet"><animateMotion dur="2.8s" repeatCount="indefinite"><mpath href="#argus-cisco"/></animateMotion></circle>
+  <circle class="packet backup-packet"><animateMotion dur="2.4s" repeatCount="indefinite"><mpath href="#osiris-cisco"/></animateMotion></circle>
+  <circle class="packet"><animateMotion dur="3.7s" repeatCount="indefinite"><mpath href="#atlas-cisco"/></animateMotion></circle>
+  <circle class="packet alert-packet"><animateMotion dur="2.9s" repeatCount="indefinite"><mpath href="#wazuh-cisco"/></animateMotion></circle>
+  <circle class="packet"><animateMotion dur="3.4s" repeatCount="indefinite"><mpath href="#pi-cisco"/></animateMotion></circle>
+  <circle class="packet"><animateMotion dur="3.0s" repeatCount="indefinite"><mpath href="#hades-cisco"/></animateMotion></circle>
+  <g class="svg-node online" transform="translate(520,35)"><rect width="160" height="50" rx="14"/><text x="80" y="31">Home Router</text></g>
+  <g class="svg-node online" transform="translate(530,155)"><rect width="140" height="50" rx="14"/><text x="70" y="31">Cisco Switch</text></g>
+  <g id="svg-heavy" class="svg-node online" transform="translate(20,370)"><rect width="130" height="55" rx="14"/><text x="65" y="34">Cerberus Heavy</text></g>
+  <g id="svg-light" class="svg-node online" transform="translate(165,370)"><rect width="130" height="55" rx="14"/><text x="65" y="34">Cerberus Light</text></g>
+  <g id="svg-argus" class="svg-node online" transform="translate(310,370)"><rect width="130" height="55" rx="14"/><text x="65" y="34">Argus</text></g>
+  <g id="svg-osiris" class="svg-node online qdevice" transform="translate(455,370)"><rect width="130" height="55" rx="14"/><text x="65" y="34">Osiris</text></g>
+  <g id="svg-atlas" class="svg-node online" transform="translate(600,370)"><rect width="130" height="55" rx="14"/><text x="65" y="34">Atlas / Plex</text></g>
+  <g id="svg-wazuh" class="svg-node online" transform="translate(745,370)"><rect width="130" height="55" rx="14"/><text x="65" y="34">Wazuh</text></g>
+  <g id="svg-pi" class="svg-node online" transform="translate(890,370)"><rect width="130" height="55" rx="14"/><text x="65" y="34">NOC Pi</text></g>
+  <g id="svg-hades" class="svg-node online" transform="translate(1035,370)"><rect width="130" height="55" rx="14"/><text x="65" y="34">Hades</text></g>
+  <text class="topo-caption" x="30" y="490">Animated topology: visual heartbeat. Telemetry values are real; packet dots are not packet captures.</text>
+</svg>
+</div>

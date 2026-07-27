@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Sentinel Operations Console - Hue Scenes{% endblock %}
+{% block heading %}Hue Scenes{% endblock %}
+{% block content %}
+<section class="mission-banner">
+  <div>
+    <div class="eyebrow">PHILIPS HUE</div>
+    <h1 class="{{ 'mission-green' if hue.ok else 'mission-yellow' }}">{{ "BRIDGE ONLINE" if hue.ok else "BRIDGE UNREACHABLE" }}</h1>
+    <p>{{ hue.error if hue.error else (hue.bridge_name or hue.bridge_host or "Bridge connected.") }}</p>
+  </div>
+  <button type="button" class="small-button" id="hue-scene-new">+ New Scene</button>
+</section>
+
+<div id="hue-scenes-list" class="hue-scene-list" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:16px;"></div>
+
+<script id="hue-scenes-bootstrap" type="application/json">{{ scenes|tojson }}</script>
+<script src="/static/js/hue-scenes.js"></script>
+{% endblock %}

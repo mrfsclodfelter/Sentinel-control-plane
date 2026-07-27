@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Cerberus Ops - App Configuration{% endblock %}
+{% block heading %}App Configuration{% endblock %}
+{% block content %}
+<section class="mission-banner">
+  <div>
+    <div class="eyebrow">NO-YAML CONFIGURATION</div>
+    <h1 class="mission-green">CONTROL CENTER CONFIG</h1>
+    <p>Edit Hue, Proxmox, Wazuh, and device configuration from the web interface. Cerberus writes the YAML for you.</p>
+  </div>
+  <a class="launch-button" href="/settings">Settings</a>
+</section>
+
+<section class="config-tabs">
+  <button class="small-button config-tab active" data-config-tab="hue">Hue</button>
+  <button class="small-button config-tab" data-config-tab="proxmox">Proxmox</button>
+  <button class="small-button config-tab" data-config-tab="wazuh">Wazuh</button>
+  <button class="small-button config-tab" data-config-tab="devices">Devices</button>
+</section>
+
+<section class="config-editor-grid">
+  <article class="v3-card config-pane active" id="config-pane-hue">
+    <div class="panel-title">Philips Hue</div>
+    <label class="audio-toggle-row"><input type="checkbox" id="hue-enabled"> Hue enabled</label>
+    <label class="field-label">Bridge IP</label>
+    <input class="cerb-input" id="hue-bridge" placeholder="192.168.50.xxx">
+    <label class="field-label">Hue API Key / Username</label>
+    <input class="cerb-input" id="hue-username" placeholder="Paste Hue API username/key">
+    <label class="field-label">Room Name</label>
+    <input class="cerb-input" id="hue-room" placeholder="Office">
+    <label class="field-label">Light IDs</label>
+    <input class="cerb-input" id="hue-light-ids" placeholder="Optional: 1,2,3">
+    <p class="muted">Use room name if possible. Light IDs are Hue Bridge numeric IDs from /api/hue/status, not MAC addresses.</p>
+    <button class="small-button" id="save-hue-config">Save Hue Config</button>
+    <button class="small-button" id="test-hue-status">Test Hue Status</button>
+  </article>
+
+  <article class="v3-card config-pane" id="config-pane-proxmox">
+    <div class="panel-title">Proxmox</div>
+    <p class="muted">Structured endpoint editor is next; for now this saves JSON as YAML.</p>
+    <textarea class="cerb-textarea config-json-box" id="proxmox-json"></textarea>
+    <button class="small-button" id="save-proxmox-config">Save Proxmox Config</button>
+  </article>
+
+  <article class="v3-card config-pane" id="config-pane-wazuh">
+    <div class="panel-title">Wazuh</div>
+    <textarea class="cerb-textarea config-json-box" id="wazuh-json"></textarea>
+    <button class="small-button" id="save-wazuh-config">Save Wazuh Config</button>
+  </article>
+
+  <article class="v3-card config-pane" id="config-pane-devices">
+    <div class="panel-title">Devices</div>
+    <textarea class="cerb-textarea config-json-box" id="devices-json"></textarea>
+    <button class="small-button" id="save-devices-config">Save Devices Config</button>
+  </article>
+</section>
+
+<script id="config-bootstrap" type="application/json">{{ config|tojson }}</script>
+<script src="/static/js/app-config.js?v=820"></script>
+{% endblock %}

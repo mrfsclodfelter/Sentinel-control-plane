@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Cerberus Operations Console - Agent Detail{% endblock %}
+{% block heading %}Agent Security Detail{% endblock %}
+{% block content %}
+{% set agent = details.agent %}
+<section class="mission-banner">
+  <div>
+    <div class="eyebrow">WAZUH AGENT</div>
+    <h1 class="{{ 'mission-green' if agent and agent.status == 'active' else 'mission-yellow' }}">{{ agent.name if agent else "Unknown Agent" }}</h1>
+    <p>{{ agent.os.name if agent and agent.os is defined and agent.os.name is defined else "Unknown OS" }} · ID {{ agent.id if agent else "-" }} · {{ agent.ip if agent else "-" }}</p>
+  </div>
+  <a class="launch-button" href="/security">Back to Security</a>
+</section>
+{% if details.error %}<div class="alert warn">{{ details.error }}</div>{% endif %}
+<section class="metrics-grid">
+  <div class="metric-card"><span>Status</span><strong class="{{ 'ok' if agent and agent.status == 'active' else 'warn' }}">{{ agent.status|upper if agent else "UNKNOWN" }}</strong></div>
+  <div class="metric-card"><span>Critical</span><strong class="bad">{{ details.counts.critical }}</strong></div>
+  <div class="metric-card"><span>High</span><strong class="warn">{{ details.counts.high }}</strong></div>
+  <div class="metric-card"><span>Total Vulns</span><strong>{{ details.counts.total }}</strong></div>
+</section>
+<section class="two-column">
+  <div>
+    <section class="section-title">Agent Inventory</section>
+    <div class="table-card"><table><tbody>
+      <tr><th>Name</th><td>{{ agent.name if agent else "-" }}</td></tr>
+      <tr><th>IP</th><td>{{ agent.ip if agent else "-" }}</td></tr>
+      <tr><th>Version</th><td>{{ agent.version if agent else "-" }}</td></tr>
+      <tr><th>OS</th><td>{{ agent.os.name if agent and agent.os is defined and agent.os.name is defined else "-" }}</td></tr>
+      <tr><th>Last Keepalive</th><td>{{ agent.lastKeepAlive if agent else "-" }}</td></tr>
+      <tr><th>Registered</th><td>{{ agent.dateAdd if agent else "-" }}</td></tr>
+    </tbody></table></div>
+  </div>
+  <div>
+    <section class="section-title">Top Packages</section>
+    <div class="table-card"><table><thead><tr><th>Package</th><th>Count</th></tr></thead><tbody>
+    {% for item in details.top_packages %}<tr><td>{{ item.name }}</td><td>{{ item.count }}</td></tr>{% endfor %}
+    </tbody></table></div>
+  </div>
+</section>
+<section class="section-title">Vulnerabilities</section>
+<div class="table-card"><table><thead><tr><th>CVE</th><th>Severity</th><th>Score</th><th>Package</th><th>Version</th><th>Description</th></tr></thead><tbody>
+{% for vuln in details.vulnerabilities %}
+<tr><td>{{ vuln.cve }}</td><td class="{{ 'bad' if vuln.severity == 'Critical' else 'warn' if vuln.severity in ['High','Medium'] else 'ok' }}">{{ vuln.severity }}</td><td>{{ vuln.score }}</td><td>{{ vuln.package }}</td><td>{{ vuln.version }}</td><td>{{ vuln.description }}</td></tr>
+{% endfor %}
+</tbody></table></div>
+{% endblock %}

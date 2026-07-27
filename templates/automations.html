@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block title %}Sentinel Operations Console - Automations{% endblock %}
+{% block heading %}Automation Builder{% endblock %}
+{% block content %}
+<section class="mission-banner">
+  <div>
+    <div class="eyebrow">AUTOMATION BUILDER</div>
+    <h1 class="mission-green">CREATE / EDIT AUTOMATION</h1>
+    <p>Create lighting, music, and Sentinel voice-response automations from one place.</p>
+  </div>
+  <button type="button" class="small-button" id="automation-new">New Automation</button>
+</section>
+
+<section class="section-title">Automations</section>
+<div id="automations-list" class="device-grid"></div>
+
+<section class="section-title" id="automation-editor-anchor">Add / Edit Automation</section>
+<div class="table-card" style="padding:18px;">
+  <input type="hidden" id="automation-id">
+
+  <div class="section-title" style="margin-top:0;">Identity</div>
+  <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:14px;">
+    <div>
+      <label class="field-label">Automation Name</label>
+      <input class="cerb-input" id="automation-name" placeholder="Example: Combat Mode">
+    </div>
+    <div>
+      <label class="field-label">Category</label>
+      <input class="cerb-input" id="automation-category" value="custom">
+    </div>
+    <div>
+      <label class="field-label">Enabled</label>
+      <select class="cerb-input" id="automation-enabled">
+        <option value="true">Enabled</option>
+        <option value="false">Disabled</option>
+      </select>
+    </div>
+  </div>
+  <label class="field-label" style="margin-top:10px;">Description</label>
+  <input class="cerb-input" id="automation-description" placeholder="What this automation does">
+
+  <div class="section-title">Voice</div>
+  <div class="alert warn" style="margin-bottom:12px;">Voice trigger matching and spoken responses need the Pi's speech pipeline, which isn't connected to this instance yet. These fields are saved now so automations are ready the moment it is.</div>
+  <label class="field-label">Exact Voice Trigger Phrases</label>
+  <textarea class="cerb-textarea" id="automation-voice-triggers" rows="3" placeholder="Sentinel arm systems&#10;Sentinel combat mode"></textarea>
+  <div class="muted" style="font-size:12px;margin:4px 0 10px;">One phrase per line. Fuzzy matching helps with imperfect transcripts.</div>
+
+  <label class="field-label">Example Natural Phrases</label>
+  <textarea class="cerb-textarea" id="automation-natural-phrases" rows="3" placeholder="are we good&#10;how is the lab doing"></textarea>
+  <div class="muted" style="font-size:12px;margin:4px 0 10px;">Stored for intent-style matching later.</div>
+
+  <label class="field-label">Spoken Response</label>
+  <textarea class="cerb-textarea" id="automation-spoken-response" rows="2" placeholder="Combat mode engaged."></textarea>
+  <div class="muted" style="font-size:12px;margin:4px 0 10px;">Default response if no alternate response is chosen.</div>
+
+  <label class="field-label">Alternate Spoken Responses</label>
+  <textarea class="cerb-textarea" id="automation-alt-responses" rows="3" placeholder="Armed and ready.&#10;Sentinel systems are live."></textarea>
+  <div class="muted" style="font-size:12px;margin:4px 0 10px;">Optional. Sentinel randomly chooses one when this automation runs.</div>
+
+  <div class="section-title">Lighting and Music</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:14px;">
+    <div>
+      <label class="field-label">Hue Scene</label>
+      <select class="cerb-input" id="automation-hue-scene"><option value="">No change</option></select>
+    </div>
+    <div>
+      <label class="field-label">Music Behavior</label>
+      <select class="cerb-input" id="automation-music-behavior">
+        <option value="none">Do not change music</option>
+        <option value="play">Play track</option>
+        <option value="stop">Stop music</option>
+      </select>
+    </div>
+    <div>
+      <label class="field-label">Music Track</label>
+      <select class="cerb-input" id="automation-music-track"><option value="">No track selected</option></select>
+    </div>
+    <div>
+      <label class="field-label">After Track Ends</label>
+      <select class="cerb-input" id="automation-after-track">
+        <option value="stop">Stop</option>
+        <option value="playlist">Continue playlist</option>
+        <option value="shuffle">Shuffle</option>
+      </select>
+    </div>
+  </div>
+
+  <div style="margin-top:16px;">
+    <div class="section-title" id="automation-json-toggle" style="cursor:pointer;">▸ Advanced action preview (read-only)</div>
+    <pre id="automation-json-preview" style="display:none;"></pre>
+  </div>
+
+  <div style="margin-top:16px;display:flex;gap:10px;">
+    <button class="small-button" id="automation-save">Save Automation</button>
+    <button class="small-button danger-soft" id="automation-delete" style="display:none;">Delete</button>
+  </div>
+</div>
+
+<script src="/static/js/automations.js"></script>
+{% endblock %}

@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+<head>
+  <title>{% block title %}Sentinel Operations Console{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1628">
+  <link rel="apple-touch-icon" href="/static/icons/sentinel-icon-180.png?v=4">
+  <link rel="manifest" href="/static/manifest.json">
+  <link rel="stylesheet" href="/static/css/mission.css">
+</head>
+<body class="mission-shell">
+<div class="global-grid-bg"></div>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="logo logo-v40 brand-lockup">
+      <img src="/static/branding/sentinel-logo.png" alt="Sentinel" class="brand-logo-image">
+      <small class="brand-subtitle">Lab Operations Console</small>
+      <span class="status-pill" style="margin-top:8px;font-size:10px;padding:4px 10px;">HARDENED</span>
+    </div>
+    <button type="button" id="mobile-nav-toggle" class="mobile-nav-toggle" aria-expanded="false">Menu</button>
+    <nav>
+      <a class="{{ 'active' if page == 'dashboard' else '' }}" href="/">Dashboard</a>
+      <a class="{{ 'active' if page == 'cluster' else '' }}" href="/cluster">Cluster</a>
+      <a class="{{ 'active' if page == 'vms' else '' }}" href="/vms">VMs</a>
+      <a class="{{ 'active' if page == 'storage' else '' }}" href="/storage">Storage</a>
+      <a class="{{ 'active' if page == 'backups' else '' }}" href="/backups">Backups</a>
+      <a class="{{ 'active' if page == 'hue-scenes' else '' }}" href="/hue-scenes">Hue Scenes</a>
+      <a class="{{ 'active' if page == 'music' else '' }}" href="/music">Music</a>
+      <a class="{{ 'active' if page == 'automations' else '' }}" href="/automations">Automations</a>
+      <a class="{{ 'active' if page == 'scenario-ops' else '' }}" href="/scenario-ops">Scenario Ops</a>
+      <a class="{{ 'active' if page == 'network' else '' }}" href="/network">Network</a>
+      <a class="{{ 'active' if page == 'security' else '' }}" href="/security">Security</a>
+      <a class="{{ 'active' if page == 'wireguard' else '' }}" href="/wireguard">WireGuard</a>
+      <a class="{{ 'active' if page == 'logs' else '' }}" href="/logs">Logs</a>
+      <a class="{{ 'active' if page == 'settings' else '' }}" href="/settings">Settings</a>
+      <a href="/logout">Log out</a>
+    </nav>
+  </aside>
+  <main class="content">
+    <header class="topbar">
+      <div><div class="eyebrow">SENTINEL NET</div><h2>{% block heading %}{% endblock %}</h2></div>
+      <div class="topbar-actions"><a class="wallboard-link" href="/mission-control">Mission Control</a><div class="status-pill" id="mission-pill">SYNCING</div></div>
+    </header>
+    {% block content %}{% endblock %}
+  </main>
+</div>
+<section class="global-ticker"><div id="global-ticker-content">SENTINEL ONLINE • TELEMETRY SYNCING •</div></section>
+<script src="/static/js/common.js"></script>
+<script src="/static/js/global-ticker.js"></script>
+{% block scripts %}{% endblock %}
+<script src="/static/js/cerberus-tooltips.js"></script>
+<script src="/static/js/mission-nav.js"></script>
+<script>
+(function(){
+  var toggle = document.getElementById('mobile-nav-toggle');
+  var sidebar = document.querySelector('.sidebar');
+  if (!toggle || !sidebar) return;
+  toggle.addEventListener('click', function(){
+    var open = sidebar.classList.toggle('nav-open');
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  // Collapse again once a nav link is tapped, so the next page starts collapsed too.
+  sidebar.querySelectorAll('nav a').forEach(function(a){
+    a.addEventListener('click', function(){ sidebar.classList.remove('nav-open'); });
+  });
+})();
+</script>
+
+<div id="global-mini-player" class="global-mini-player">
+  <button id="mini-player-toggle" title="Play/Pause">▶</button>
+  <div class="mini-player-bars"><span></span><span></span><span></span><span></span></div>
+  <small id="mini-player-meta">Music standby</small>
+  <select id="mini-player-track"><option value="">Music</option></select>
+  <button id="mini-player-next" title="Shuffle">↦</button>
+  <button id="mini-player-listen" title="Tap to talk to Sentinel">🎙 Talk</button>
+  <small id="mini-player-listen-status"></small>
+  <audio id="mini-player-audio" style="display:none;"></audio>
+  <audio id="mini-player-listen-audio" style="display:none;"></audio>
+</div>
+<script src="/static/js/global-audio-player.js"></script>
+<script src="/static/js/push-to-talk.js"></script>
+<script>
+if (window.isSecureContext && 'serviceWorker' in navigator) {
+  // Served from the site root (not /static/sw.js) so its default scope
+  // covers the whole app - browsers cap a worker's scope to its own
+  // directory unless the server opts in with a special response header,
+  // and root-serving sidesteps needing that entirely.
+  navigator.serviceWorker.register('/sw.js').catch(() => {});
+}
+</script>
+</body>
+</html>

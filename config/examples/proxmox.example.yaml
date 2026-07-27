@@ -1,0 +1,37 @@
+# Sentinel talks to one or more Proxmox VE endpoints. Each key under
+# `proxmox:` is a named endpoint. The FIRST one is treated as the primary
+# cluster - its quorum and node membership drive the Mission Control view.
+#
+# Additional endpoints are standalone PVE hosts. Their node telemetry is
+# merged into the node list for display, but they are never counted toward
+# cluster quorum, so adding one can't turn an odd-numbered cluster even.
+#
+# Create a least-privilege token on each host rather than reusing root:
+#
+#   pveum user add <api-user>@pve
+#   pveum aclmod / -user <api-user>@pve -role PVEAuditor
+#   pveum user token add <api-user>@pve <token-name> --privsep 0
+#
+# PVEAuditor is read-only. If you want Sentinel to start/stop VMs or shut
+# hosts down, grant those additional privileges deliberately - don't reach
+# for Administrator.
+
+proxmox:
+  # Primary cluster.
+  primary-cluster:
+    host: "192.0.2.10:8006"
+    user: "CHANGEME@pve"
+    token_name: "CHANGEME"
+    token_value: "CHANGEME"
+
+  # Optional standalone host (the app host itself, an isolated lab node...).
+  # Delete this block if you only have one endpoint.
+  standalone-host:
+    host: "192.0.2.11:8006"
+    user: "CHANGEME@pve"
+    token_name: "CHANGEME"
+    token_value: "CHANGEME"
+
+# Home labs generally run Proxmox's self-signed cert. Set true if you have
+# installed a real certificate on the API.
+verify_ssl: false

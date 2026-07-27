@@ -1,0 +1,10 @@
+# Optional. Sentinel falls back to safe documentation-range defaults if this
+# file is absent, but the health checks are only meaningful once you point
+# them at your own network.
+#
+# gateway        - your LAN gateway; the "LAN Gateway" reachability card
+# internet_probe - an always-up external IP used as the internet check
+# dns_probe      - a hostname resolved to prove DNS works
+gateway: "192.0.2.1"
+internet_probe: "1.1.1.1"
+dns_probe: "example.com"

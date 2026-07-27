@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Sentinel Operations Console - Settings{% endblock %}
+{% block heading %}Settings{% endblock %}
+{% block content %}
+<div class="alert warn">Configuration is stored in config/local/ on the Sentinel host. That directory is git-ignored — secrets are never committed.</div>
+
+<section class="section-title">Application Configuration</section>
+<div class="settings-action-grid">
+  <article class="settings-action-card">
+    <div>
+      <h3>App Configuration</h3>
+      <p>Configure Hue, Proxmox, Wazuh, and devices without manually editing YAML.</p>
+    </div>
+    <a class="small-button" href="/app-config">Open App Configuration</a>
+  </article>
+  <article class="settings-action-card">
+    <div>
+      <h3>Hue Scenes</h3>
+      <p>Create and edit reusable Hue lighting scenes.</p>
+    </div>
+    <a class="small-button" href="/hue-scenes">Open Hue Scenes</a>
+  </article>
+</div>
+
+<section class="section-title">Devices</section>
+<section class="table-card">
+  <table>
+    <thead><tr><th>Device</th><th>IP</th><th>Method</th><th>Start Loop</th></tr></thead>
+    <tbody>
+      {% for key, device in devices.items() %}
+      <tr><td>{{ device.name }}</td><td>{{ device.ip or '-' }}</td><td>{{ device.method }}</td><td>{{ device.include_in_start }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+
+<section class="section-title">Voice (Cerberus NOC Pi)</section>
+<div class="table-card" style="padding:18px;">
+  <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;">
+    <span>Listener:</span>
+    <strong id="voice-listener-state" class="led">CHECKING</strong>
+    <button type="button" class="small-button" id="voice-listener-start">Start</button>
+    <button type="button" class="small-button" id="voice-listener-stop">Stop</button>
+    <button type="button" class="small-button" id="voice-listener-restart">Restart</button>
+  </div>
+  <div style="margin-top:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+    <input class="cerb-input" id="voice-say-text" placeholder="Say something through the Pi speaker" style="flex:1;min-width:260px;">
+    <button type="button" class="small-button" id="voice-say-btn">Speak</button>
+    <button type="button" class="small-button" id="voice-listen-btn">Listen (push to talk)</button>
+  </div>
+  <div style="margin-top:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;">
+    <div>
+      <label for="voice-volume-slider" style="display:flex;justify-content:space-between;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:1px;"><span>Voice Volume</span><span id="voice-volume-value">100%</span></label>
+      <input type="range" id="voice-volume-slider" min="0" max="100" value="100" style="width:100%;">
+    </div>
+    <div>
+      <label for="media-volume-slider" style="display:flex;justify-content:space-between;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:1px;"><span>Media Volume</span><span id="media-volume-value">100%</span></label>
+      <input type="range" id="media-volume-slider" min="0" max="100" value="100" style="width:100%;">
+    </div>
+  </div>
+  <p class="muted" style="font-size:12px;margin-top:10px;">Independent baseline levels for Sentinel's spoken voice vs. music playback, applied on the Pi speaker and in the browser mini-player. The Pi's audio hardware can't mix two streams at once, so these set how loud each is when it plays - not a live crossfade while both play simultaneously.</p>
+</div>
+{% endblock %}
+{% block scripts %}<script src="/static/js/voice-settings.js"></script>{% endblock %}

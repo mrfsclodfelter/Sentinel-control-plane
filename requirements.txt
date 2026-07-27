@@ -1,0 +1,7 @@
+flask==3.0.3
+requests==2.32.3
+pyyaml==6.0.2
+urllib3==2.2.3
+werkzeug==3.0.6
+piper-tts==1.4.2
+mutagen==1.48.1

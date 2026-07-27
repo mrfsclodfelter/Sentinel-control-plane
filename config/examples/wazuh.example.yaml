@@ -1,0 +1,13 @@
+wazuh:
+  host: 192.0.2.20
+  port: 55000
+  verify_ssl: false
+  username: "CHANGEME"
+  password: "CHANGEME"
+
+indexer:
+  host: 192.0.2.20
+  port: 9200
+  verify_ssl: false
+  username: "CHANGEME"
+  password: "CHANGEME"
